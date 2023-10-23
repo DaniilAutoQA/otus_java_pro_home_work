@@ -9,8 +9,6 @@ import org.openqa.selenium.remote.RemoteWebDriver;
 
 public class ChromeDriverSettings implements IBrowserSettings {
 
-
-    @SuppressWarnings("checkstyle:Indentation")
     @Override
     public WebDriver webDriver() {
         ChromeOptions chromeOptions = new ChromeOptions();

@@ -10,7 +10,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 public interface IBrowserSettings {
-//
+
     String REMOTE_URL = System.getProperty("webdriver.remote.url");
 
     public WebDriver webDriver();
