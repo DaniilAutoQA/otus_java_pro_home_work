@@ -4,7 +4,6 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 
-import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -29,13 +28,9 @@ public class MainPage extends AbsBasePage<MainPage> {
         super(driver);
     }
 
-    public <T extends AbsBasePage<T>> T openCoursePage(Class<T> pageClazz) throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
-        Constructor<T> constructor = pageClazz.getConstructor(WebDriver.class);
-        return (T) constructor.newInstance(driver);
-    }
-
-    public void goToFirstStartedSpecialization() throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+    public LessonsPage goToFirstStartedSpecialization() throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
         getFirstStartedCourse(specialStartDate).get().click();
+        return new LessonsPage(driver);
     }
 
     public Optional<WebElement> getFirstStartedCourse(List<WebElement> elements) {
@@ -50,20 +45,7 @@ public class MainPage extends AbsBasePage<MainPage> {
         });
     }
 
-    public Optional<WebElement> findFirstStartedCourse() {
-        SimpleDateFormat formatter = new SimpleDateFormat("dd MMMM yyyy");
-        return specialStartDate.stream().reduce((el1, el2) -> {
-            try {
-                return formatter.parse(el1.getText().substring(2).split("\n")[0]).before(formatter.parse(el2.getText().substring(2).split("\n")[0])) ? el1 : el2;
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
-            return null;
-        });
-    }
-
     public WebElement findCourseByName(String courseName) {
-
         return Stream.concat(specialNameList.stream(), courseNameList.stream())
                 .filter(name -> name.getText().contains(courseName)).findFirst().get();
 

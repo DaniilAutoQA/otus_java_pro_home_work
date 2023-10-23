@@ -9,7 +9,6 @@ import org.openqa.selenium.remote.RemoteWebDriver;
 
 public class OperaDriverSettings implements IBrowserSettings {
 
-
     @Override
     public WebDriver webDriver() {
         OperaOptions options = new OperaOptions();

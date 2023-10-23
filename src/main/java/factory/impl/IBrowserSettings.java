@@ -25,8 +25,6 @@ public interface IBrowserSettings {
 
     default void downloadLocalWebDriver(DriverManagerType driverType) throws DriverTypeNotSupported {
 
-
-
         String browserVersion = System.getProperty("browser.version", "");
 
         if (!browserVersion.isEmpty()) {
@@ -40,10 +38,12 @@ public interface IBrowserSettings {
                     Config wdmConfigFirefox = WebDriverManager.firefoxdriver().config();
                     wdmConfigFirefox.setAvoidBrowserDetection(true);
                     wdmConfigFirefox.setFirefoxVersion(browserVersion);
+                    break;
                 case OPERA:
                     Config wdmConfigOpera = WebDriverManager.operadriver().config();
                     wdmConfigOpera.setAvoidBrowserDetection(true);
                     wdmConfigOpera.setOperaVersion(browserVersion);
+                    break;
                 default:
                     throw new DriverTypeNotSupported(driverType);
             }
