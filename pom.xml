@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.example</groupId>
-    <artifactId>dz1homeversion</artifactId>
+    <artifactId>otus_java_pro_home_work</artifactId>
     <version>1.0-SNAPSHOT</version>
 
     <properties>
@@ -20,7 +20,7 @@
         <browser>chrome</browser>
         <webdriver.base.url>https://otus.ru</webdriver.base.url>
         <test.project.language>RU</test.project.language>
-        <webdriver.timeouts.implicitlywait>3000</webdriver.timeouts.implicitlywait>
+        <webdriver.timeouts.implicitlywait>5000</webdriver.timeouts.implicitlywait>
     </properties>
 
     <dependencies>
@@ -50,6 +50,11 @@
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
             <version>${junit.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.assertj</groupId>
+            <artifactId>assertj-core</artifactId>
+            <version>3.24.2</version>
         </dependency>
     </dependencies>
 

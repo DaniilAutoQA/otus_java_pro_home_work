@@ -3,6 +3,7 @@ package pages;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 
 import java.lang.reflect.InvocationTargetException;
 import java.text.ParseException;
@@ -13,31 +14,37 @@ import java.util.stream.Stream;
 
 public class MainPage extends AbsBasePage<MainPage> {
 
-    @FindBy(xpath = "//div[@class='sc-1pljn7g-6 kbUYTE']")
-    private List<WebElement> courseCards;
-    @FindBy(xpath = "//h5[@class='sc-1pljn7g-1 hvCeDA']")
-    private List<WebElement> courseNameList;
-    @FindBy(xpath = "//div[@class='sc-12yergf-11 fgNPoG']")
-    private List<WebElement> specializationCards;
-    @FindBy(xpath = "//div[@class='sc-12yergf-10 bddZLL']")
+    @FindBy(css = ".AjnvM")
     private List<WebElement> specialNameList;
-    @FindBy(xpath = "//span[@class='sc-12yergf-7 dPBnbE']")
+    @FindBy(css = ".dPBnbE")
     private List<WebElement> specialStartDate;
+    @FindBy(css = ".hvCeDA")
+    private List<WebElement> courseNameList;
 
     public MainPage(WebDriver driver) {
         super(driver);
     }
 
-    public LessonsPage goToFirstStartedSpecialization() throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
-        getFirstStartedCourse(specialStartDate).get().click();
+    public LessonsPage goToSpecializationByStartDate(String startDate) throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+        getCourseByStartDate(specialStartDate, startDate).get().click();
         return new LessonsPage(driver);
     }
 
-    public Optional<WebElement> getFirstStartedCourse(List<WebElement> elements) {
+    public Optional<WebElement> getCourseByStartDate(List<WebElement> elements, String startDate) {
         SimpleDateFormat formatter = new SimpleDateFormat("dd MMMM yyyy");
         return elements.stream().reduce((el1, el2) -> {
             try {
-                return formatter.parse(el1.getText().substring(2).split("\n")[0]).before(formatter.parse(el2.getText().substring(2).split("\n")[0])) ? el1 : el2;
+                String dateEl1 = el1.getText().substring(2).split("\n")[0];
+                String dateEl2 = el2.getText().substring(2).split("\n")[0];
+                switch (startDate) {
+                    case "early": {
+                        return formatter.parse(dateEl1).before(formatter.parse(dateEl2)) ? el1 : el2;
+                    }
+                    case "later": {
+                        return formatter.parse(dateEl1).after(formatter.parse(dateEl2)) ? el1 : el2;
+                    }
+                }
+
             } catch (ParseException e) {
                 e.printStackTrace();
             }
@@ -45,9 +52,12 @@ public class MainPage extends AbsBasePage<MainPage> {
         });
     }
 
-    public WebElement findCourseByName(String courseName) {
+    public Optional<WebElement> findCourseByName(String courseName) {
+        assert standartWaiter.waitForCondition(ExpectedConditions.visibilityOfAllElements(specialNameList));
+        assert standartWaiter.waitForCondition(ExpectedConditions.visibilityOfAllElements(courseNameList));
         return Stream.concat(specialNameList.stream(), courseNameList.stream())
-                .filter(name -> name.getText().contains(courseName)).findFirst().get();
+                .filter(name -> name.getText().contains(courseName)).findFirst();
 
     }
+
 }
