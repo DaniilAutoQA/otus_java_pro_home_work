@@ -12,7 +12,7 @@ public class FirefoxDriverSettings implements IBrowserSettings {
     @Override
     public WebDriver webDriver() {
         FirefoxOptions firefoxOptions = new FirefoxOptions();
-        firefoxOptions.addArguments("--start-fullscreen");
+        firefoxOptions.addArguments("--start-maximized");
 
         if (getRemoteUrl() == null) {
             try {

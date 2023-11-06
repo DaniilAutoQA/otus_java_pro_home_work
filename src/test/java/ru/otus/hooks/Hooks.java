@@ -14,7 +14,6 @@ public class Hooks {
     public void afterScenario() {
         if (guiceScoped.driver != null) {
             guiceScoped.driver.close();
-            guiceScoped.driver.quit();
         }
     }
 }
