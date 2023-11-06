@@ -13,17 +13,23 @@
         <maven.compiler.target>11</maven.compiler.target>
         <webdriver.manager.version>5.5.3</webdriver.manager.version>
         <selenium.java.version>3.141.59</selenium.java.version>
+        <cucumber.version>7.14.0</cucumber.version>
         <junit.version>5.8.1</junit.version>
         <surefire.plugin.version>2.22.2</surefire.plugin.version>
         <maven.compiler.plugin.version>3.8.1</maven.compiler.plugin.version>
 
         <browser>chrome</browser>
-        <webdriver.base.url>https://otus.ru</webdriver.base.url>
+        <base.url>https://otus.ru</base.url>
         <test.project.language>RU</test.project.language>
         <webdriver.timeouts.implicitlywait>5000</webdriver.timeouts.implicitlywait>
     </properties>
 
     <dependencies>
+        <dependency>
+            <groupId>org.jsoup</groupId>
+            <artifactId>jsoup</artifactId>
+            <version>1.16.2</version>
+        </dependency>
         <dependency>
             <groupId>io.github.bonigarcia</groupId>
             <artifactId>webdrivermanager</artifactId>
@@ -56,6 +62,33 @@
             <artifactId>assertj-core</artifactId>
             <version>3.24.2</version>
         </dependency>
+        <dependency>
+            <groupId>io.cucumber</groupId>
+            <artifactId>cucumber-junit-platform-engine</artifactId>
+            <version>${cucumber.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.cucumber</groupId>
+            <artifactId>cucumber-java</artifactId>
+            <version>${cucumber.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>io.cucumber</groupId>
+            <artifactId>cucumber-guice</artifactId>
+            <version>${cucumber.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.inject</groupId>
+            <artifactId>guice</artifactId>
+            <version>5.1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>io.cucumber</groupId>
+            <artifactId>cucumber-core</artifactId>
+            <version>4.3.1</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>
@@ -71,15 +104,19 @@
                             <value>${project.basedir}/allure-results</value>
                         </property>
                         <property>
-                            <name>junit.jupiter.extensions.autodetection.enabled</name>
+                            <name>junit.jupiter.ru.otus.extensions.autodetection.enabled</name>
                             <value>true</value>
                         </property>
+                        <properties>
+                            <configurationParameters>
+                                cucumber.junit-platform.naming-strategy=long
+                            </configurationParameters>
+                        </properties>
                     </systemProperties>
                     <systemPropertyVariables>
                         <browser>${browser}</browser>
                         <webdriver.timeouts.implicitlywait>${webdriver.timeouts.implicitlywait}
                         </webdriver.timeouts.implicitlywait>
-                        <webdriver.base.url>${webdriver.base.url}</webdriver.base.url>
                         <test.project.status>test</test.project.status>
                         <test.project.language>${test.project.language}</test.project.language>
                     </systemPropertyVariables>
@@ -102,8 +139,8 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>${maven.compiler.plugin.version}</version>
                 <configuration>
-                    <source>1.8</source>
-                    <target>1.8</target>
+                    <source>11</source>
+                    <target>11</target>
                     <showDeprecation>true</showDeprecation>
                 </configuration>
             </plugin>
