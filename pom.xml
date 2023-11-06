@@ -11,12 +11,16 @@
     <properties>
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
         <webdriver.manager.version>5.5.3</webdriver.manager.version>
         <selenium.java.version>3.141.59</selenium.java.version>
         <cucumber.version>7.14.0</cucumber.version>
-        <junit.version>5.8.1</junit.version>
+        <junit.version>5.10.0</junit.version>
         <surefire.plugin.version>2.22.2</surefire.plugin.version>
-        <maven.compiler.plugin.version>3.8.1</maven.compiler.plugin.version>
+        <maven.compiler.plugin.version>3.11.0</maven.compiler.plugin.version>
+        <spotbugs-maven-plugin.version>4.7.2.1</spotbugs-maven-plugin.version>
+        <maven-checkstyle-plugin.version>3.3.0</maven-checkstyle-plugin.version>
 
         <browser>chrome</browser>
         <base.url>https://otus.ru</base.url>
@@ -25,11 +29,6 @@
     </properties>
 
     <dependencies>
-        <dependency>
-            <groupId>org.jsoup</groupId>
-            <artifactId>jsoup</artifactId>
-            <version>1.16.2</version>
-        </dependency>
         <dependency>
             <groupId>io.github.bonigarcia</groupId>
             <artifactId>webdrivermanager</artifactId>
@@ -48,7 +47,7 @@
         <dependency>
             <groupId>org.junit</groupId>
             <artifactId>junit-bom</artifactId>
-            <version>5.8.1</version>
+            <version>${junit.version}</version>
             <type>pom</type>
             <scope>compile</scope>
         </dependency>
@@ -72,7 +71,6 @@
             <artifactId>cucumber-java</artifactId>
             <version>${cucumber.version}</version>
         </dependency>
-
         <dependency>
             <groupId>io.cucumber</groupId>
             <artifactId>cucumber-guice</artifactId>
@@ -84,9 +82,9 @@
             <version>5.1.0</version>
         </dependency>
         <dependency>
-            <groupId>io.cucumber</groupId>
-            <artifactId>cucumber-core</artifactId>
-            <version>4.3.1</version>
+            <groupId>org.junit.platform</groupId>
+            <artifactId>junit-platform-suite-engine</artifactId>
+            <version>1.10.0</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
@@ -98,41 +96,12 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>${surefire.plugin.version}</version>
                 <configuration>
-                    <systemProperties>
-                        <property>
-                            <name>allure.results.directory</name>
-                            <value>${project.basedir}/allure-results</value>
-                        </property>
-                        <property>
-                            <name>junit.jupiter.ru.otus.extensions.autodetection.enabled</name>
-                            <value>true</value>
-                        </property>
-                        <properties>
-                            <configurationParameters>
-                                cucumber.junit-platform.naming-strategy=long
-                            </configurationParameters>
-                        </properties>
-                    </systemProperties>
+                    <test>${suite}</test>
                     <systemPropertyVariables>
+                        <base.url>${base.url}</base.url>
                         <browser>${browser}</browser>
-                        <webdriver.timeouts.implicitlywait>${webdriver.timeouts.implicitlywait}
-                        </webdriver.timeouts.implicitlywait>
-                        <test.project.status>test</test.project.status>
-                        <test.project.language>${test.project.language}</test.project.language>
                     </systemPropertyVariables>
                 </configuration>
-                <dependencies>
-                    <dependency>
-                        <groupId>org.junit.jupiter</groupId>
-                        <artifactId>junit-jupiter-api</artifactId>
-                        <version>5.8.1</version>
-                    </dependency>
-                    <dependency>
-                        <groupId>org.junit.jupiter</groupId>
-                        <artifactId>junit-jupiter-engine</artifactId>
-                        <version>5.8.1</version>
-                    </dependency>
-                </dependencies>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -145,33 +114,17 @@
                 </configuration>
             </plugin>
             <plugin>
+                <groupId>com.github.spotbugs</groupId>
+                <artifactId>spotbugs-maven-plugin</artifactId>
+                <version>${spotbugs-maven-plugin.version}</version>
+            </plugin>
+            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-checkstyle-plugin</artifactId>
-                <version>3.1.0</version>
+                <version>${maven-checkstyle-plugin.version}</version>
                 <configuration>
                     <includeTestSourceDirectory>true</includeTestSourceDirectory>
                     <configLocation>${project.build.sourceDirectory}/../resources/checkstyle.xml</configLocation>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>analyze-compile</id>
-                        <phase>compile</phase>
-                        <goals>
-                            <goal>check</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>com.github.spotbugs</groupId>
-                <artifactId>spotbugs-maven-plugin</artifactId>
-                <version>4.7.2.1</version>
-                <configuration>
-                    <effort>Max</effort>
-                    <threshold>Low</threshold>
-                    <xmlOutput>true</xmlOutput>
-                    <includeTests>true</includeTests>
-                    <omitVisitors>UnreadFields</omitVisitors>
                 </configuration>
                 <executions>
                     <execution>
